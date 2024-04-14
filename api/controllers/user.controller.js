@@ -14,23 +14,24 @@ const updateUser = async (req, res, next) => {
     try {
         if(req.user.password)
         {
-            const hashedPassword = bcryptjs.hashSync(req.body.password, 10);
+            req.body.password = bcryptjs.hashSync(req.body.password, 10);
         }
 
-        const updataUser = new User.findByIdAndUpdate(req.params.id, {
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, {
             $set:{
                 username: req.body.username,
-                password: hashedPassword,
-                email: req.user.email,
-                avatar: req.user.avatar
+                email: req.body.email,
+                password: req.body.password,
+                avatar: req.body.avatar 
             }
         }, {new: true});
 
-        const {password, ...rest} = updataUser._doc;
-
+        const {password, ...rest} = updatedUser._doc;
+        console.log(rest);
         res.status(200).json(rest);
     }
     catch (error) {
+        // console.log("h");
         next(error);
     }
 

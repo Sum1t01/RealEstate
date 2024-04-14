@@ -19,10 +19,19 @@ catch(err)
 const app = express();
 
 app.use(express.json());
-app.use(cookieParser);
+app.use(cookieParser());
+
+
+
+const PORT = 3000
+
+app.listen(PORT, ()=>{
+    console.log(`Server is listening on Port: ${PORT}...`)
+})
+
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
-app.get("/", (req, res)=>{console.log("ding!")})
+app.get("/", (req, res)=>{console.log("ding!")}) 
 
 app.use((err, req, res, next)=>{
     const status = err.status || 500;
@@ -34,9 +43,3 @@ app.use((err, req, res, next)=>{
         message: message
     });
 });
-
-const PORT = 3000
-
-app.listen(PORT, ()=>{
-    console.log(`Server is listening on Port: ${PORT}...`)
-})
