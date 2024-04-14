@@ -35,6 +35,8 @@ app.use((err, req, res, next)=>{
     });
 });
 
-app.listen(3000, ()=>{
-    console.log("Server is listening on Port: 3000...")
+const PORT = 3000
+
+app.listen(PORT, ()=>{
+    console.log(`Server is listening on Port: ${PORT}...`)
 })
