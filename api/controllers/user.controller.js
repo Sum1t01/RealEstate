@@ -38,4 +38,22 @@ const updateUser = async (req, res, next) => {
 
 }
 
-export { updateUser, test };
+const deleteUser = async (req, res, next)=>{
+    if(req.params.id!==req.user.id)
+    {
+        return next(errorHandler(401, "Cant Delete ID"));
+    }
+
+    try
+    {
+        await User.findByIdAndDelete(req.params.id);
+        res.clearCookie('access_token');
+        res.status(200).json({message:"User has been deleted"});
+    }
+    catch(error)
+    {
+        next(error);
+    }
+};
+
+export { updateUser, test, deleteUser};
