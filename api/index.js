@@ -4,15 +4,14 @@ import dotenv from "dotenv";
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
+import listingRouter from "./routes/listing.route.js";
 
 dotenv.config();
 
-try
-{
+try {
     mongoose.connect(process.env.MONGO);
 }
-catch(err)
-{
+catch (err) {
     console.log(err);
 }
 
@@ -25,21 +24,22 @@ app.use(cookieParser());
 
 const PORT = 3000
 
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
     console.log(`Server is listening on Port: ${PORT}...`)
 })
 
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
-app.get("/", (req, res)=>{console.log("ding!")}) 
+app.use("/api/listing", listingRouter);
+app.get("/", (req, res) => { console.log("ding!") })
 
-app.use((err, req, res, next)=>{
+app.use((err, req, res, next) => {
     const status = err.status || 500;
     const message = err.message || "Backend error";
 
     res.status(status).json({
-        success:false,
-        status:status,
+        success: false,
+        status: status,
         message: message
     });
 });
