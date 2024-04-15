@@ -7,10 +7,11 @@ const test = (req, res) => {
 }
 
 const updateUser = async (req, res, next) => {
+    // console.log(req.body);
     if (req.user.id != req.params.id) {
         return next(errorHandler(401, "Unauthorized!"));
     }
-
+    
     try {
         if(req.user.password)
         {
@@ -27,7 +28,7 @@ const updateUser = async (req, res, next) => {
         }, {new: true});
 
         const {password, ...rest} = updatedUser._doc;
-        console.log(rest);
+        // console.log(rest.username);
         res.status(200).json(rest);
     }
     catch (error) {

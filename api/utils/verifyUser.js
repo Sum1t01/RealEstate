@@ -2,7 +2,7 @@ import errorHandler from "./error.js";
 import jwt from "jsonwebtoken";
 
 const verifyToken = (req, res, next)=>{
-    console.log(req.cookies);
+    // console.log(req.cookies);
     const token = req.cookies.access_token;
 
     if(!token)
@@ -15,7 +15,7 @@ const verifyToken = (req, res, next)=>{
         {
             return next(errorHandler(403, "Forbidden!"));
         }
-
+        // console.log(user);
         req.user = user;
         next();
     });
