@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect } from 'react';
 import { app } from '../firebase';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import {Link} from "react-router-dom";
 import {
   updateUserStart,
   updateUserFailure,
@@ -175,7 +176,10 @@ function Profile() {
         <input type="text" onChange={handleChange} placeholder="username" id="username" className="border p-3 rounded-lg" defaultValue={currentUser.username} />
         <input type="email" onChange={handleChange} placeholder="email" id="email" className="border p-3 rounded-lg" defaultValue={currentUser.email} />
         <input type="password" onChange={handleChange} placeholder="password" id="password" className="border p-3 rounded-lg" />
-        <button className="bg-green-600 text-white rounded-lg p-3 uppercase hover:opacity-90 disabled:opacity-80">Update</button>
+        <button className="bg-slate-600 text-white rounded-lg p-3 uppercase hover:opacity-90 disabled:opacity-80">Update</button>
+            <Link className="bg-green-700 text-white rounded-lg p-3 uppercase hover:opacity-90 text-center" to={"/create-listing"}>
+            Create Listing
+            </Link>
       </form>
 
       <div className="flex justify-between mt-5">
