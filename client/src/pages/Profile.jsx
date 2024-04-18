@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRef, useEffect } from 'react';
 import { app } from '../firebase';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   updateUserStart,
   updateUserFailure,
@@ -29,11 +29,15 @@ function Profile() {
   const [formData, setFromData] = useState({});
   // console.log(formData);
 
+  const [showListingsError, setShowListingsError] = useState(false);
+
   const dispatch = useDispatch();
 
   const changeHandler = (event) => {
     return setFile(event.target.files[0]);
   }
+
+  const [userListings, setUserListings] = useState([]);
 
   useEffect(() => {
     if (file) {
@@ -132,24 +136,42 @@ function Profile() {
 
 
   const handleSignOut = async (event) => {
-    try
-    {
+    try {
       dispatch(signOutUserStart());
       const res = await fetch("/api/auth/signout");
 
       const data = await res.json();
 
-      if(data.success===false)
-      {
+      if (data.success === false) {
         dispatch(signOutUserFailure(data.message));
         return;
       }
 
       dispatch(signOutUserSuccess());
     }
-    catch(error)
-    {
+    catch (error) {
       dispatch(signOutUserFailure(error.message));
+    }
+  };
+
+
+  const handleShowListings = async (event) => {
+    try {
+      setShowListingsError(false);
+
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+
+      const data = await res.json();
+
+      if (data.message === false) {
+        setShowListingsError(true);
+        return;
+      }
+
+      setUserListings(data);
+    }
+    catch (error) {
+      setShowListingsError(true);
     }
   };
 
@@ -177,15 +199,58 @@ function Profile() {
         <input type="email" onChange={handleChange} placeholder="email" id="email" className="border p-3 rounded-lg" defaultValue={currentUser.email} />
         <input type="password" onChange={handleChange} placeholder="password" id="password" className="border p-3 rounded-lg" />
         <button className="bg-slate-600 text-white rounded-lg p-3 uppercase hover:opacity-90 disabled:opacity-80">Update</button>
-            <Link className="bg-green-700 text-white rounded-lg p-3 uppercase hover:opacity-90 text-center" to={"/create-listing"}>
-            Create Listing
-            </Link>
+        <Link className="bg-green-700 text-white rounded-lg p-3 uppercase hover:opacity-90 text-center" to={"/create-listing"}>
+          Create Listing
+        </Link>
       </form>
 
       <div className="flex justify-between mt-5">
         <span onClick={handleDelete} className="text-red-700 cursor-pointer">Delete Account</span>
         <span onClick={handleSignOut} className="text-red-700 cursor-pointer">Sign out</span>
       </div>
+      <button type="button" onClick={handleShowListings} className='my-3 cursor-pointer text-green-700 w-full'>
+        Show Listings
+      </button>
+      <p className='text-red-700 mt-5'>
+        {showListingsError ? "Error showing listing" : ""}
+      </p>
+
+      {userListings && userListings.length > 0 &&
+        <div className='flex flex-col gap-3'>
+<h1 className='text-center my-7 text-2xl font-semibold'>
+  Your Listings
+</h1>
+          {
+          userListings.map((listing) => (
+            <div key={listing._id} className='border p-3 rounded-lg flex justify-between items-center gap-4 hover:shadow-lg' >
+              <Link to={`/listing/${listing._id}`}>
+                <img src={listing.imageURLs[0]} alt="Listing Cover" className='h-16 w-16 object-contain' />
+
+              </Link>
+
+              <Link to={`/listing/${listing._id}`} className="text-slate-700 font-semibold flex-1 hover:underline truncate ">
+                <p >
+                  {listing.name}
+                </p>
+              </Link>
+
+              <div className='flex flex-col gap-2'>
+                <button type="button" className='text-red-700 uppercase'>
+                  Delete
+
+                </button>
+                <button type="button" className='text-green-700 uppercase'>
+                  Edit
+
+                </button>
+              </div>
+            </div>
+          ))
+          }
+
+        </div>
+      }
+
     </div>
 
 
