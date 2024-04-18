@@ -11,8 +11,8 @@ function Header() {
             <div className="flex justify-between items-center mx-auto p-2">
                 <Link to="/">
                     <h1 className="font-medium text-sm sm:text-sl flex flex-wrap">
-                        <span className="text-slate-500">Real</span>
-                        <span className="text-slate-700">Estate</span>
+                        <span className="text-slate-500 text-xl">Real</span>
+                        <span className="text-slate-700 text-xl">Estate</span>
                         {/* <span><SearchRoundedIcon/></span> */}
                     </h1>
                 </Link>
