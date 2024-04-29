@@ -189,13 +189,14 @@ function Profile() {
       }
 
       setUserListings(
-        (prev)=>prev.filter((listing)=>listing._id!==id));
+        (prev) => prev.filter((listing) => listing._id !== id));
 
     }
     catch (error) {
       console.log(error.message);
     }
   };
+
 
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -261,10 +262,12 @@ function Profile() {
                     Delete
 
                   </button>
-                  <button type="button" className='text-green-700 uppercase'>
-                    Edit
+                  <Link to={`/update-listing/${listing._id}`}>
+                    <button type="button" className='text-green-700 uppercase'>
+                      Edit
 
-                  </button>
+                    </button>
+                  </Link>
                 </div>
               </div>
             ))

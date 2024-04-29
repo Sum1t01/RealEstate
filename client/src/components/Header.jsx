@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom"
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import { useSelector } from "react-redux";
 
 function Header() {
@@ -10,7 +11,8 @@ function Header() {
         <header className="bg-stone-300 shadow-md">
             <div className="flex justify-between items-center mx-auto p-2">
                 <Link to="/">
-                    <h1 className="font-medium text-sm sm:text-sl flex flex-wrap">
+                    <h1 className="font-medium text-sm sm:text-sl flex flex-wrap gap-1">
+                        <MapsHomeWorkIcon/>
                         <span className="text-slate-500 text-xl">Real</span>
                         <span className="text-slate-700 text-xl">Estate</span>
                         {/* <span><SearchRoundedIcon/></span> */}
