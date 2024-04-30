@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css/bundle';
+import {useSelector} from 'react-redux';
 import ShareIcon from '@mui/icons-material/Share';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import HotelIcon from '@mui/icons-material/Hotel';
@@ -11,15 +12,17 @@ import BathtubIcon from '@mui/icons-material/Bathtub';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import ChairIcon from '@mui/icons-material/Chair';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
+import Contact from '../components/Contact';
 
 function Listing() {
     SwiperCore.use([Navigation]);
     const params = useParams();
     const [listing, setListing] = useState(null);
-
+    const {currentUser} = useSelector((state)=>state.user);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [contact, setContact] = useState(false);
 
     useEffect(() => {
         const fetchListing = async () => {
@@ -51,7 +54,7 @@ function Listing() {
 
     }, [params.listingID]);
 
-    console.log(listing);
+    // console.log(listing);
 
     return (
         <main>
@@ -155,6 +158,14 @@ function Listing() {
                                 {listing.furnished ? 'Furnished' : 'Unfurnished'}
                             </li>
                         </ul>
+                        {currentUser && listing.userRef !== currentUser._id && !contact &&(
+
+                        <button onClick={()=>setContact(true)} className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-85 p-3">
+                            Contact Landlord
+                        </button>
+                        )}
+
+                        {contact && <Contact listing={listing}/>}
                     </div>
 
                 </div>
