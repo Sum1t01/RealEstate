@@ -17,6 +17,7 @@ function Search() {
 
     const [loading, setLoading] = useState(false);
     const [listings, setListings] = useState([]);
+    const [showMore, setShowMore] = useState(false);
 
 
     useEffect(() => {
@@ -44,9 +45,17 @@ function Search() {
         const fetchListing = async () => {
 
             setLoading(true);
+            setShowMore(false);
             const searchQuery = urlParams.toString();
             const res = await fetch(`/api/listing/get?${searchQuery}`);
             const data = await res.json();
+            if (data.length > 8) {
+                setShowMore(true);
+            }
+            else
+            {
+                setShowMore(false);
+            }
             setListings(data);
             setLoading(false);
 
@@ -93,6 +102,27 @@ function Search() {
         const searchQuery = urlParams.toString();
 
         navigate(`/search?${searchQuery}`);
+    };
+
+    const onShowMoreClick = async (event)=>{
+        const noOfListings = listings.length;
+        const startIndex = noOfListings;
+        const urlParams = new URLSearchParams(location.search);
+
+        urlParams.set('startIndex', startIndex);
+
+        const searchQuery = urlParams.toString();
+
+        const res = await fetch(`/api/listing/get?${searchQuery}`);
+
+        const data = await res.json();
+
+        if(data.length<9)
+        {
+            setShowMore(false);
+        }
+
+        setListings([...listings, ...data]);
     };
 
     return (
@@ -263,16 +293,25 @@ function Search() {
                         </p>
                     )}
 
-                    {!loading && listings && listings.map((listing)=>(
-                        <ListingItem key = {listing._id} listing={listing} />
+                    {!loading && listings && listings.map((listing) => (
+                        <ListingItem key={listing._id} listing={listing} />
                     ))}
-                    
+
+
+                    {showMore && (
+                        <button
+                            onClick={onShowMoreClick}
+                            className='text-green-700 hover:underline p-7 text-center w-full'
+                        >
+                            Show More
+                        </button>
+                    )}
                 </div>
 
 
             </div>
         </div>
-    )
+    );
 }
 
 export default Search;
